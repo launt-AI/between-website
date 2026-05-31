@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BETWEEN · the intimate life store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Noto+Serif+SC:wght@300;400;500&family=Noto+Sans+SC:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        /* ─── Reset ─────────────────────────────────────────── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --cream:   #FAF6EF;
+            --apricot: #F5EFE6;
+            --caramel: #E8D5C4;
+            --terra:   #A88B7A;
+            --brown:   #5C3D32;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--cream);
+            color: var(--brown);
+            font-family: 'Noto Sans SC', 'PingFang SC', sans-serif;
+            font-weight: 300;
+            overflow-x: hidden;
+        }
+
+        /* ─── Typography helpers ─────────────────────────────── */
+        .en-display {
+            font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+            font-weight: 400;
+            letter-spacing: 0.45em;
+            text-transform: uppercase;
+        }
+        .en-italic {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-weight: 300;
+        }
+        .cn-serif {
+            font-family: 'Noto Serif SC', 'Songti SC', serif;
+            font-weight: 400;
+        }
+        .label {
+            font-family: 'Cormorant Garamond', serif;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            color: var(--terra);
+        }
+
+        /* ─── Navigation ─────────────────────────────────────── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 200;
+            padding: 1.6rem 3.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.4s, border-color 0.4s;
+        }
+        nav.scrolled {
+            background: rgba(250,246,239,0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--caramel);
+        }
+        .nav-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem;
+            letter-spacing: 0.55em;
+            text-transform: uppercase;
+            color: var(--brown);
+            text-decoration: none;
+            padding-right: 0.55em;
+        }
+        .nav-links { display: flex; gap: 2.8rem; list-style: none; }
+        .nav-links a {
+            font-family: 'Cormorant Garamond', serif;
+            letter-spacing: 0.22em;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            color: var(--terra);
+            text-decoration: none;
+            transition: color 0.25s;
+        }
+        .nav-links a:hover { color: var(--brown); }
+
+        /* ─── Hero ───────────────────────────────────────────── */
+        #hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 7rem 2rem 5rem;
+            position: relative;
+        }
+
+        .hero-brand {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.8rem, 9vw, 7.5rem);
+            font-weight: 400;
+            letter-spacing: 0.55em;
+            padding-right: 0.55em;
+            color: var(--brown);
+            text-transform: uppercase;
+            margin-bottom: 1.8rem;
+            line-height: 1;
+        }
+        .hero-tagline {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            letter-spacing: 0.35em;
+            color: var(--terra);
+            margin-bottom: 3.5rem;
+        }
+        .hero-rule {
+            width: 60px; height: 1px;
+            background: var(--terra);
+            margin: 0 auto 2.5rem;
+        }
+        .hero-est {
+            font-family: 'Cormorant Garamond', serif;
+            letter-spacing: 0.4em;
+            font-size: 0.82rem;
+            color: var(--terra);
+            text-transform: uppercase;
+        }
+
+        /* scroll cue */
+        .scroll-cue {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+        }
+        .scroll-cue span {
+            font-family: 'Cormorant Garamond', serif;
+            letter-spacing: 0.3em;
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            color: var(--terra);
+            opacity: 0.5;
+        }
+        .scroll-line {
+            width: 1px; height: 44px;
+            background: var(--terra);
+            opacity: 0.4;
+            animation: scrollPulse 1.8s ease-in-out infinite;
+        }
+        @keyframes scrollPulse {
+            0%,100% { transform: scaleY(0.4); transform-origin: top; opacity: 0.2; }
+            50%      { transform: scaleY(1);   transform-origin: top; opacity: 0.6; }
+        }
+
+        /* ─── Shared section layout ──────────────────────────── */
+        .section { padding: 8rem 2rem; }
+        .container      { max-width: 900px;  margin: 0 auto; }
+        .container-wide { max-width: 1200px; margin: 0 auto; }
+
+        .s-label  { margin-bottom: 1.2rem; }
+        .s-title  {
+            font-family: 'Noto Serif SC', serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            font-weight: 400;
+            letter-spacing: 0.22em;
+            color: var(--brown);
+            margin-bottom: 0.4rem;
+        }
+        .s-sub {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1rem;
+            color: var(--terra);
+            margin-bottom: 2.5rem;
+        }
+        .s-rule {
+            width: 48px; height: 1px;
+            background: var(--terra);
+            margin-bottom: 3.5rem;
+        }
+
+        /* ─── About ──────────────────────────────────────────── */
+        #about { background: var(--apricot); }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: start;
+        }
+        .about-heading {
+            font-family: 'Cormorant Garamond', serif;
+            letter-spacing: 0.28em;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            color: var(--terra);
+            margin-bottom: 1.2rem;
+        }
+        .about-body-cn {
+            font-size: 0.93rem;
+            line-height: 2.1;
+            color: var(--brown);
+            margin-bottom: 1.8rem;
+        }
+        .about-body-en {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.97rem;
+            line-height: 1.85;
+            color: var(--terra);
+        }
+        .name-box {
+            padding: 2.8rem;
+            background: var(--cream);
+            border: 1px solid var(--caramel);
+        }
+        .name-box-label {
+            font-family: 'Cormorant Garamond', serif;
+            letter-spacing: 0.3em;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--terra);
+            margin-bottom: 1.8rem;
+        }
+        .name-box-cn {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.05rem;
+            line-height: 2;
+            color: var(--brown);
+            margin-bottom: 1.8rem;
+        }
+        .name-box-en {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.95rem;
+            line-height: 1.85;
+            color: var(--terra);
+        }
+
+        /* ─── Manifesto ──────────────────────────────────────── */
+        #manifesto { background: var(--cream); text-align: center; }
+        #manifesto .s-rule { margin: 0 auto 3.5rem; }
+
+        .manifesto-quote-cn {
+            font-family: 'Noto Serif SC', serif;
+            font-size: clamp(1.6rem, 4vw, 2.8rem);
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--brown);
+            margin-bottom: 1.8rem;
+        }
+        .manifesto-quote-en {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(1rem, 2.2vw, 1.4rem);
+            color: var(--terra);
+            line-height: 1.7;
+            margin-bottom: 4rem;
+            letter-spacing: 0.04em;
+        }
+        .manifesto-div {
+            width: 44px; height: 1px;
+            background: var(--caramel);
+            margin: 0 auto 4rem;
+        }
+        .manifesto-body-cn {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.05rem;
+            line-height: 2.3;
+            color: var(--brown);
+            margin-bottom: 1.4rem;
+        }
+        .manifesto-body-en {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.97rem;
+            line-height: 1.9;
+            color: var(--terra);
+        }
+
+        /* ─── Products ───────────────────────────────────────── */
+        #products { background: var(--cream); }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .p-card {
+            padding: 3rem;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .p-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(92,61,50,0.08);
+        }
+        .p-card.care    { background: #CDE0D7; }
+        .p-card.protect { background: #E3CCCC; }
+        .p-card.play    { background: var(--brown); }
+        .p-card.mood    { background: var(--apricot); border: 1px solid var(--caramel); }
+
+        .p-series {
+            font-family: 'Cormorant Garamond', serif;
+            letter-spacing: 0.42em;
+            font-size: 1.5rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            padding-right: 0.42em;
+            margin-bottom: 0.4rem;
+        }
+        .p-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.88rem;
+            margin-bottom: 2.5rem;
+        }
+        .p-desc-cn {
+            font-size: 0.84rem;
+            line-height: 1.9;
+            margin-bottom: 0.5rem;
+        }
+        .p-desc-en {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.85rem;
+        }
+
+        /* CARE colors */
+        .p-card.care .p-series   { color: #2E5C44; }
+        .p-card.care .p-subtitle { color: #527A65; }
+        .p-card.care .p-desc-cn  { color: #2E5C44; }
+        .p-card.care .p-desc-en  { color: #527A65; }
+
+        /* PROTECT colors */
+        .p-card.protect .p-series   { color: #6B2E2E; }
+        .p-card.protect .p-subtitle { color: #8A5A5A; }
+        .p-card.protect .p-desc-cn  { color: #6B2E2E; }
+        .p-card.protect .p-desc-en  { color: #8A5A5A; }
+
+        /* PLAY colors */
+        .p-card.play .p-series   { color: var(--cream); }
+        .p-card.play .p-subtitle { color: var(--caramel); }
+        .p-card.play .p-desc-cn  { color: var(--caramel); }
+        .p-card.play .p-desc-en  { color: var(--terra); }
+
+        /* MOOD colors */
+        .p-card.mood .p-series   { color: var(--brown); }
+        .p-card.mood .p-subtitle { color: var(--terra); }
+        .p-card.mood .p-desc-cn  { color: var(--brown); }
+        .p-card.mood .p-desc-en  { color: var(--terra); }
+
+        /* ─── Values ─────────────────────────────────────────── */
+        #values { background: var(--apricot); }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .v-card {
+            padding: 3rem;
+            background: var(--cream);
+            border: 1px solid var(--caramel);
+            transition: border-color 0.3s;
+        }
+        .v-card:hover { border-color: var(--terra); }
+
+        .v-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.15rem;
+            color: var(--terra);
+            margin-bottom: 1.5rem;
+        }
+        .v-title-cn {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.3rem;
+            letter-spacing: 0.22em;
+            color: var(--brown);
+            margin-bottom: 0.3rem;
+        }
+        .v-title-en {
+            font-family: 'Cormorant Garamond', serif;
+            letter-spacing: 0.35em;
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            color: var(--terra);
+            margin-bottom: 1.6rem;
+        }
+        .v-body-cn {
+            font-size: 0.88rem;
+            line-height: 1.9;
+            color: var(--brown);
+            margin-bottom: 0.7rem;
+        }
+        .v-body-en {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.88rem;
+            line-height: 1.75;
+            color: var(--terra);
+        }
+
+        /* ─── Story ──────────────────────────────────────────── */
+        #story { background: var(--brown); }
+        #story .s-title { color: var(--cream); }
+        #story .s-sub   { color: var(--caramel); }
+        #story .s-rule  { background: var(--terra); }
+        #story .label   { color: var(--caramel); }
+
+        .story-cn {
+            font-size: 0.93rem;
+            line-height: 2.3;
+            color: var(--caramel);
+            margin-bottom: 1.8rem;
+        }
+        .story-en {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.97rem;
+            line-height: 1.9;
+            color: rgba(250,246,239,0.5);
+            margin-bottom: 3rem;
+        }
+        .story-highlight {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            line-height: 2.1;
+            color: var(--cream);
+            border-left: 2px solid var(--terra);
+            padding-left: 2rem;
+            margin: 3.5rem 0;
+        }
+
+        /* ─── Footer ─────────────────────────────────────────── */
+        footer {
+            background: var(--brown);
+            border-top: 1px solid rgba(168,139,122,0.25);
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+        .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            letter-spacing: 0.65em;
+            padding-right: 0.65em;
+            text-transform: uppercase;
+            color: var(--cream);
+            margin-bottom: 0.6rem;
+        }
+        .footer-tagline {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.9rem;
+            letter-spacing: 0.25em;
+            color: var(--terra);
+            margin-bottom: 2.5rem;
+        }
+        .footer-rule {
+            width: 40px; height: 1px;
+            background: var(--terra);
+            margin: 0 auto 2.5rem;
+        }
+        .footer-manifesto-cn {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--caramel);
+            margin-bottom: 0.5rem;
+        }
+        .footer-manifesto-en {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.9rem;
+            color: var(--terra);
+            margin-bottom: 3.5rem;
+        }
+        .footer-meta {
+            font-family: 'Cormorant Garamond', serif;
+            letter-spacing: 0.35em;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            color: rgba(168,139,122,0.45);
+        }
+
+        /* ─── Fade-in ─────────────────────────────────────────── */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity 0.75s ease, transform 0.75s ease;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ─── Responsive ─────────────────────────────────────── */
+        @media (max-width: 800px) {
+            nav { padding: 1.2rem 1.5rem; }
+            .nav-links { display: none; }
+            .section { padding: 5rem 1.5rem; }
+            .about-grid, .values-grid, .products-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── Navigation ──────────────────────────────────────────── -->
+<nav id="navbar">
+    <a href="#hero" class="nav-logo">Between</a>
+    <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#manifesto">Manifesto</a></li>
+        <li><a href="#products">Collection</a></li>
+        <li><a href="#values">Values</a></li>
+        <li><a href="#story">Story</a></li>
+    </ul>
+</nav>
+
+<!-- ── Hero ────────────────────────────────────────────────── -->
+<section id="hero">
+    <h1 class="hero-brand">Between</h1>
+    <p class="hero-tagline">the intimate life store</p>
+    <div class="hero-rule"></div>
+    <p class="hero-est">EST · 2026</p>
+    <div class="scroll-cue">
+        <div class="scroll-line"></div>
+        <span>scroll</span>
+    </div>
+</section>
+
+<!-- ── About ────────────────────────────────────────────────── -->
+<section id="about" class="section">
+    <div class="container">
+        <p class="label s-label">01 · About Between</p>
+        <h2 class="s-title">关 于 BETWEEN</h2>
+        <p class="s-sub">a curated store for intimate life.</p>
+        <div class="s-rule"></div>
+
+        <div class="about-grid">
+            <div class="fade-in">
+                <p class="about-heading">WHO WE ARE</p>
+                <p class="about-body-cn">BETWEEN 是一家"为亲密生活而挑"的集合买手店。</p>
+                <p class="about-body-cn">我们从世界各地挑选最有设计感、最被认真对待的产品——从私处护理到情趣，从避孕到香氛，让"亲密"这件事，回到它本该有的温柔与日常。</p>
+                <p class="about-body-en">BETWEEN is a curated store for intimate life. We thoughtfully source the most beautifully designed pieces from around the world — from intimate care to playful pleasure, from protection to scent — bringing intimacy back to the tender, everyday space where it belongs.</p>
+            </div>
+
+            <div class="name-box fade-in" style="transition-delay: 0.15s;">
+                <p class="name-box-label">THE NAME · 名字</p>
+                <p class="name-box-cn">
+                    BETWEEN——之间。<br><br>
+                    是两个人之间的距离，也是那一层薄薄的、温柔的"在场"。不是隔阂，是体贴；不是工具，是仪式。
+                </p>
+                <p class="name-box-en">BETWEEN — the space between two people. A thin, tender presence. Not a barrier — a kindness. Not a tool — a small ritual.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Manifesto ─────────────────────────────────────────────── -->
+<section id="manifesto" class="section">
+    <div class="container" style="text-align:center;">
+        <p class="label s-label">03 · Brand Manifesto</p>
+        <h2 class="s-title" style="text-align:center;">品 牌 主 张</h2>
+        <p class="s-sub">our manifesto.</p>
+        <div class="s-rule" style="margin-left:auto; margin-right:auto;"></div>
+
+        <div class="fade-in">
+            <p class="manifesto-quote-cn">在两个人之间，<br>留一点温柔。</p>
+            <p class="manifesto-quote-en">Leave a little tenderness, in between.</p>
+        </div>
+
+        <div class="manifesto-div"></div>
+
+        <div class="fade-in" style="transition-delay: 0.2s;">
+            <p class="manifesto-body-cn">
+                最好的亲密，<br>
+                是松弛的、平等的、有美感的。<br>
+                是你和他之间，<br>
+                那一点点恰到好处的温柔。
+            </p>
+            <br>
+            <p class="manifesto-body-en">
+                The best kind of intimacy is unhurried,<br>
+                equal, and beautiful.<br>
+                It's that little tenderness,<br>
+                right there, between you and them.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- ── Products ──────────────────────────────────────────────── -->
+<section id="products" class="section" style="background: var(--apricot);">
+    <div class="container-wide">
+        <p class="label s-label">05 · Product Architecture</p>
+        <h2 class="s-title">产 品 系 列</h2>
+        <p class="s-sub">four series, one curated story.</p>
+        <div class="s-rule"></div>
+
+        <div class="products-grid">
+            <div class="p-card care fade-in">
+                <div>
+                    <p class="p-series">C A R E</p>
+                    <p class="p-subtitle">亲密护理 · intimate care</p>
+                </div>
+                <div>
+                    <p class="p-desc-cn">私处护理 · 润滑 · 经期<br>核心利润系列</p>
+                    <p class="p-desc-en">gentle care, beautifully made.</p>
+                </div>
+            </div>
+
+            <div class="p-card protect fade-in" style="transition-delay:0.1s;">
+                <div>
+                    <p class="p-series">P R O T E C T</p>
+                    <p class="p-subtitle">避孕系列 · contraception</p>
+                </div>
+                <div>
+                    <p class="p-desc-cn">进口避孕套 · 编号系列<br>核心引流 · 品牌符号</p>
+                    <p class="p-desc-en">a choice made by two.</p>
+                </div>
+            </div>
+
+            <div class="p-card play fade-in" style="transition-delay:0.2s;">
+                <div>
+                    <p class="p-series">P L A Y</p>
+                    <p class="p-subtitle">情趣小物 · playful pleasure</p>
+                </div>
+                <div>
+                    <p class="p-desc-cn">情趣小物 · 振动器 · 按摩<br>高毛利形象品</p>
+                    <p class="p-desc-en">playful, beautiful, between.</p>
+                </div>
+            </div>
+
+            <div class="p-card mood fade-in" style="transition-delay:0.3s;">
+                <div>
+                    <p class="p-series">M O O D</p>
+                    <p class="p-subtitle">卧室氛围 · bedroom ambience</p>
+                </div>
+                <div>
+                    <p class="p-desc-cn">卧室香氛 · 蜡烛 · 床品<br>客单提升</p>
+                    <p class="p-desc-en">set the scene, softly.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Values ────────────────────────────────────────────────── -->
+<section id="values" class="section">
+    <div class="container">
+        <p class="label s-label">04 · Core Values</p>
+        <h2 class="s-title">价 值 观</h2>
+        <p class="s-sub">four small things we believe in.</p>
+        <div class="s-rule"></div>
+
+        <div class="values-grid">
+            <div class="v-card fade-in">
+                <p class="v-num">01</p>
+                <p class="v-title-cn">温 柔</p>
+                <p class="v-title-en">TENDER</p>
+                <p class="v-body-cn">我们拒绝粗暴的、猎奇的、消费身体的叙事。</p>
+                <p class="v-body-en">We refuse the loud, the crude, the body-as-spectacle.</p>
+            </div>
+            <div class="v-card fade-in" style="transition-delay:0.1s;">
+                <p class="v-num">02</p>
+                <p class="v-title-cn">平 等</p>
+                <p class="v-title-en">EQUAL</p>
+                <p class="v-body-cn">这是两个人的选择，不是任何一方的责任。</p>
+                <p class="v-body-en">A choice made by two — never a burden on either one.</p>
+            </div>
+            <div class="v-card fade-in" style="transition-delay:0.2s;">
+                <p class="v-num">03</p>
+                <p class="v-title-cn">美 感</p>
+                <p class="v-title-en">AESTHETIC</p>
+                <p class="v-body-cn">亲密生活值得被精致地对待。</p>
+                <p class="v-body-en">Intimate life deserves to be beautifully kept.</p>
+            </div>
+            <div class="v-card fade-in" style="transition-delay:0.3s;">
+                <p class="v-num">04</p>
+                <p class="v-title-cn">坦 然</p>
+                <p class="v-title-en">HONEST</p>
+                <p class="v-body-cn">不羞耻、不遮掩，但也不张扬。</p>
+                <p class="v-body-en">No shame, no hiding. And no need to shout.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Story ──────────────────────────────────────────────────── -->
+<section id="story" class="section">
+    <div class="container">
+        <p class="label s-label" style="color:var(--caramel);">02 · Brand Story</p>
+        <h2 class="s-title" style="color:var(--cream);">品 牌 故 事</h2>
+        <p class="s-sub" style="color:var(--caramel);">we don't talk about sex. we talk about being together.</p>
+        <div class="s-rule" style="background:var(--terra);"></div>
+
+        <div class="fade-in">
+            <p class="story-cn">我们想做一件很小、却很久没人认真做的事——把"亲密生活"这件事，从尴尬、羞耻、被回避的角落，搬回到日常的温柔里。</p>
+            <p class="story-en">We wanted to do something small — yet something no one has really done with care: to take intimate life out of the awkward, hidden corner, and bring it back into the tenderness of every day.</p>
+        </div>
+
+        <div class="story-highlight fade-in">
+            在 BETWEEN，我们不谈"性"，我们谈"在一起"。<br>
+            我们不卖"工具"，我们卖"温柔"。
+        </div>
+
+        <div class="fade-in">
+            <p class="story-cn">从美国带回植物性的私处护理，从日本挑选最薄的避孕产品，从西班牙带回设计师手作的情趣小物，从世界各地，为"亲密生活"挑出值得被认真对待的每一件东西。</p>
+            <p class="story-en">At BETWEEN, we don't talk about sex. We talk about being together. We don't sell tools. We sell tenderness.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ── Footer ─────────────────────────────────────────────────── -->
+<footer>
+    <p class="footer-logo">Between</p>
+    <p class="footer-tagline">the intimate life store</p>
+    <div class="footer-rule"></div>
+    <p class="footer-manifesto-cn">在两个人之间，留一点温柔。</p>
+    <p class="footer-manifesto-en">Leave a little tenderness, in between.</p>
+    <p class="footer-meta">BETWEEN &nbsp;·&nbsp; EST 2026 &nbsp;·&nbsp; Brand Book Vol. 01</p>
+</footer>
+
+<script>
+    // ── Navbar scroll ──────────────────────────────────────────
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        navbar.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // ── Scroll fade-in ─────────────────────────────────────────
+    const io = new IntersectionObserver(
+        (entries) => entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                io.unobserve(e.target);
+            }
+        }),
+        { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    );
+    document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
